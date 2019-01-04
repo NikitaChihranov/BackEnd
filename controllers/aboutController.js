@@ -12,6 +12,7 @@ controller.getAbout = async (req, res, next) => {
 controller.create = async (req, res, next) => {
     try {
         let AboutContent = await About.find({});
+        console.log(AboutContent);
         if (AboutContent.length==0) {
             let aboutText = await About.create(req.body);
             res.status(200).json(aboutText);
@@ -25,19 +26,21 @@ controller.create = async (req, res, next) => {
 };
 controller.update = async (req, res, next) => {
     try {
-        let aboutToUpdate = await About.findOneAndUpdate({}, {$set: {text: req.body.text}});
-        console.log(aboutToUpdate);
-        res.status(200).json(aboutToUpdate);
+        let aboutToUpdate = await About.find({});
+        let id = aboutToUpdate[0]._id;
+        let obj = await About.findByIdAndUpdate(id, req.body, {new: true});
+        res.status(200).json(obj);
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
 controller.delete = async (req, res, next) => {
     try {
-        let aboutToDelete = await About.findOneAndRemove({}, () => {
-        });
-        console.log(aboutToDelete);
-        res.status(200).json(aboutToDelete);
+        let aboutToDelete = await About.find({});
+        let id = aboutToDelete[0]._id;
+        let obj = await About.findByIdAndRemove(id);
+        aboutToDelete[0].text='';
+        res.status(200).json(obj);
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }

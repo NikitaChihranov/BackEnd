@@ -4,7 +4,8 @@ let Schema = mongoose.Schema;
 let AboutSchema = new Schema({
     text: {
         type: String,
-        required: true
+        required: true,
+        default: ''
     }
 });
 
