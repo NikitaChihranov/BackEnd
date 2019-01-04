@@ -1,5 +1,6 @@
 let ControllerError = require('../errors/ControllerError');
 let Producer = require('../models/Producer');
+let Product = require('../models/Product')
 
 let controller = {};
 
@@ -43,5 +44,26 @@ controller.delete = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.deleteAll = async (req, res, next) => {
+    try{
+        let producers = await Producer.deleteMany({}, (err) => {});
+        res.status(200).json(producers);
+        console.log(producers);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.viewAllProductsByProducer = async (req, res, next) => {
+    try{
+        let id = req.params.id;
+        let producerToFind = await Producer.findOne({_id: id});
+        console.log('producertofind');
+        let a = await Product.find({'producer': producerToFind.title});
+        console.log('a:'+ a);
+        res.status(200).json(a);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 
 module.exports = controller;
