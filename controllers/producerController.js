@@ -57,9 +57,7 @@ controller.viewAllProductsByProducer = async (req, res, next) => {
     try{
         let id = req.params.id;
         let producerToFind = await Producer.findOne({_id: id});
-        console.log('producertofind');
         let a = await Product.find({'producer': producerToFind.title});
-        console.log('a:'+ a);
         res.status(200).json(a);
     }catch (e) {
         next(new ControllerError(e.message, 400));
