@@ -4,6 +4,10 @@ let Schema = mongoose.Schema;
 let CategorySchema = new Schema({
     title:{
         type: String
+    },
+    photo: {
+        type: Schema.ObjectId,
+        ref: 'Photo'
     }
 });
 

@@ -7,20 +7,20 @@ let ProductSchema = new Schema({
     },
     price:{
         type: Number,
-
     },
     about: {
         all:{
-            type: String,
-
+            type: String
         },
         short:{
-            type: String,
-
+            type: String
         }
     },
     colors: [],
-    photos: [],
+    photos: [{
+        type: Schema.ObjectId,
+        ref: 'Photo'
+    }],
     quantity:{
         type: Number
     },
