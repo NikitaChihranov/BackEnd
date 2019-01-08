@@ -25,7 +25,7 @@ try {
             status: err.status
         });
     });
-
+    app.use(express.static('./photos'));
     app.listen(3000, () => {
         console.log('listening...!');
     });

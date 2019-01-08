@@ -16,11 +16,8 @@ let ProductSchema = new Schema({
             type: String
         }
     },
-    colors: [],
-    photos: [{
-        type: Schema.ObjectId,
-        ref: 'Photo'
-    }],
+    colors: String,
+    photos: Array,
     quantity:{
         type: Number
     },
