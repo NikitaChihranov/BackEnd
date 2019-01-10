@@ -17,7 +17,7 @@ let ProductSchema = new Schema({
         }
     },
     colors: String,
-    photos: Array,
+    photos: [String],
     quantity:{
         type: Number
     },

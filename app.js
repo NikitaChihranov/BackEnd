@@ -8,7 +8,7 @@ let ControllerError = require('./errors/ControllerError');
 mongoose.connect('mongodb://localhost:27017/shopDB', {useNewUrlParser: true});
 try {
     let app = express();
-
+    app.use(express.static('./photos'));
     app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
@@ -25,7 +25,7 @@ try {
             status: err.status
         });
     });
-    app.use(express.static('./photos'));
+
     app.listen(3000, () => {
         console.log('listening...!');
     });
