@@ -41,13 +41,33 @@ controller.create = async (req, res, next) => {
     }
 };
 controller.update =async (req, res, next) => {
-    try{
-        let product = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true});
-        res.status(200).json(product);
-    }catch (e) {
-        next(new ControllerError(e.message, 400));
+    // let productToUpdate = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    let productToUpdate = await Product.findById(req.params.id);
+    upload(req, res, async (err) => {
+        if (err) console.log(err);
+        let namesOfFileToDelete = productToUpdate.photos;
+
+        for (let file of namesOfFileToDelete) {
+            fs.unlink('../photos/' + namesOfFileToDelete[file]);
+            console.log('photo deleted');
+        }
+        let a = productToUpdate.photos.length;
+        for (let q = 0; q < a; q++){
+            productToUpdate.photos.splice(q);
+        }
+        let photosToUpload = [];
+        for (const photo of req.files) {
+            let a = photo.path.split(`\\`);
+            console.log(a);
+            let b = a.length;
+            photosToUpload.push(a[b-1]);
+        }
+        console.log(photosToUpload);
+        productToUpdate.photos = photosToUpload;
+        console.log(productToUpdate);
+        res.status(200).json(productToUpdate);
+    });
     }
-};
 controller.delete = async (req, res, next) => {
     try{
         let product = await Product.findByIdAndRemove(req.params.id);
@@ -58,6 +78,7 @@ controller.delete = async (req, res, next) => {
 };
 controller.deleteAll = async (req, res, next) => {
     try {
+
         res.json(await Product.deleteMany({}, (err) => {
         }));
     } catch (e) {
@@ -71,14 +92,17 @@ controller.uploadFile = async (req, res, next) => {
             let product = await Product.findById(req.params.id);
             let photosToUpload = [];
                 for (const photo of req.files) {
-                    photosToUpload.push(photo.path);
+                    let a = photo.path.split(`\\`);
+                    console.log(a);
+                    let b = a.length;
+                    photosToUpload.push(a[b-1]);
                 }
+                console.log(photosToUpload);
                 product.photos = photosToUpload;
                 product.save();
-                res.status(200).json(product.photos);
+                res.status(200).json(product);
             });
 }
-
 module.exports = controller;
 
 

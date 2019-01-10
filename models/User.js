@@ -4,23 +4,26 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
     firstName:{
         type: String,
-        required: true
+
     },
     surname:{
         type: String,
-        required: true
+
+    },
+    photo:{
+        type: String
     },
     phone:{
         type: String,
-        required: true
+
     },
     email:{
         type: String,
-        required: true
+
     },
     adress:{
         type: String,
-        required: true
+
     },
     admin:{
         type: Boolean,

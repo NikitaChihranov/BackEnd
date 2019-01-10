@@ -45,7 +45,6 @@ controller.delete = async (req, res, next) => {
 };
 controller.deleteAll = async (req, res, next) => {
     try {
-
         res.json(await User.deleteMany({}, (err) => {
         }));
     } catch (e) {
