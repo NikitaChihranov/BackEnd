@@ -4,11 +4,9 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
     firstName:{
         type: String,
-
     },
     surname:{
         type: String,
-
     },
     photo:{
         type: String

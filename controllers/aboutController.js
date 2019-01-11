@@ -1,6 +1,17 @@
 let ControllerError = require('../errors/ControllerError');
 let About = require('../models/About');
 let controller = {};
+let storageEngine = multer.diskStorage({
+    destination: path.join(__dirname, '../photosAbout'),
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+let upload = multer({
+    storage: storageEngine,
+    limits: {fileSize: 200000000}
+}).array('photos');
 controller.getAbout = async (req, res, next) => {
     try {
         let about = await About.findOne({});
@@ -24,6 +35,13 @@ controller.create = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.uploadPhoto = async (req, res, next) => {
+    try{
+
+    } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 controller.update = async (req, res, next) => {
     try {
         let aboutToUpdate = await About.find({});

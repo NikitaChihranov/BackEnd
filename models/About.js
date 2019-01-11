@@ -6,7 +6,8 @@ let AboutSchema = new Schema({
         type: String,
         required: true,
         default: ''
-    }
+    },
+    logo: String
 });
 
 module.exports = mongoose.model('About', AboutSchema);

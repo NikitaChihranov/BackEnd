@@ -9,6 +9,7 @@ mongoose.connect('mongodb://localhost:27017/shopDB', {useNewUrlParser: true});
 try {
     let app = express();
     app.use(express.static('./photos'));
+    app.use(express.static('./photosAbout'));
     app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
