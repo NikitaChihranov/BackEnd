@@ -46,10 +46,7 @@ controller.uploadFile = async (req, res, next) => {
         let product = await Product.findById(req.params.id);
         let photosToUpload = [];
         for (const photo of req.files) {
-            let a = photo.path.split(`\\`);
-            console.log(a);
-            let b = a.length;
-            photosToUpload.push(a[b-1]);
+            photosToUpload.push(photo.filename);
         }
         console.log('Photos to upload: ' + photosToUpload);
         product.photos = photosToUpload;
@@ -76,14 +73,10 @@ controller.updateFile = async (req, res, next) => {
     try {
         let productToUpdate = await Product.findById(req.params.id);
         upload(req, res, async (err) => {
-            console.log(777);
             if (err) console.log(err);
             let photosToUpload = [];
             for (const photo of req.files) {
-                let a = photo.path.split(`\\`);
-                console.log(a);
-                let b = a.length;
-                photosToUpload.push(a[b - 1]);
+                photosToUpload.push(photo.filename);
             }
             console.log('Photos to upload: ' + photosToUpload);
             let a = req.files.length;
