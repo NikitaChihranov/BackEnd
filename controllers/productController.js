@@ -40,21 +40,10 @@ controller.create = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.update =async (req, res, next) => {
-    // let productToUpdate = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    let productToUpdate = await Product.findById(req.params.id);
+controller.uploadFile = async (req, res, next) => {
     upload(req, res, async (err) => {
         if (err) console.log(err);
-        let namesOfFileToDelete = productToUpdate.photos;
-
-        for (let file of namesOfFileToDelete) {
-            fs.unlink('../photos/' + namesOfFileToDelete[file]);
-            console.log('photo deleted');
-        }
-        let a = productToUpdate.photos.length;
-        for (let q = 0; q < a; q++){
-            productToUpdate.photos.splice(q);
-        }
+        let product = await Product.findById(req.params.id);
         let photosToUpload = [];
         for (const photo of req.files) {
             let a = photo.path.split(`\\`);
@@ -62,12 +51,55 @@ controller.update =async (req, res, next) => {
             let b = a.length;
             photosToUpload.push(a[b-1]);
         }
-        console.log(photosToUpload);
-        productToUpdate.photos = photosToUpload;
-        console.log(productToUpdate);
-        res.status(200).json(productToUpdate);
+        console.log('Photos to upload: ' + photosToUpload);
+        product.photos = photosToUpload;
+        product.save();
+        res.status(200).json(product);
     });
+};
+controller.update = async (req, res, next) => {
+    try {
+        let productWithPhotos = await Product.findById(req.params.id);
+        let photos = productWithPhotos.photos;
+        for (let i = 0; i<photos.length; i++) {
+            fs.unlink('./photos/' + photos[i], (err) => (err));
+            console.log(photos[i]);
+        }
+        let product = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        console.log(product);
+        res.status(200).json(product);
+    }catch (e) {
+            next(new ControllerError(e.message, 400));
     }
+}
+controller.updateFile = async (req, res, next) => {
+    try {
+        let productToUpdate = await Product.findById(req.params.id);
+        upload(req, res, async (err) => {
+            console.log(777);
+            if (err) console.log(err);
+            let photosToUpload = [];
+            for (const photo of req.files) {
+                let a = photo.path.split(`\\`);
+                console.log(a);
+                let b = a.length;
+                photosToUpload.push(a[b - 1]);
+            }
+            console.log('Photos to upload: ' + photosToUpload);
+            let a = req.files.length;
+            for (let q = 0; q < a; q++) {
+                productToUpdate.photos.splice(q);
+            }
+            productToUpdate.photos = photosToUpload;
+            productToUpdate.save();
+            console.log('Updated product: ' + productToUpdate);
+            res.status(200).json(productToUpdate);
+        });
+    }catch(e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
+
 controller.delete = async (req, res, next) => {
     try{
         let product = await Product.findByIdAndRemove(req.params.id);
@@ -76,6 +108,7 @@ controller.delete = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+
 controller.deleteAll = async (req, res, next) => {
     try {
 
@@ -85,24 +118,6 @@ controller.deleteAll = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-
-controller.uploadFile = async (req, res, next) => {
-        upload(req, res, async (err) => {
-            if (err) console.log(err);
-            let product = await Product.findById(req.params.id);
-            let photosToUpload = [];
-                for (const photo of req.files) {
-                    let a = photo.path.split(`\\`);
-                    console.log(a);
-                    let b = a.length;
-                    photosToUpload.push(a[b-1]);
-                }
-                console.log(photosToUpload);
-                product.photos = photosToUpload;
-                product.save();
-                res.status(200).json(product);
-            });
-}
 module.exports = controller;
 
 
