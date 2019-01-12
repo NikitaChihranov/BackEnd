@@ -1,6 +1,20 @@
 let ControllerError = require('../errors/ControllerError');
 let Producer = require('../models/Producer');
-let Product = require('../models/Product')
+let Product = require('../models/Product');
+let multer = require('multer');
+let path = require('path');
+let fs = require('fs');
+let storageEngine = multer.diskStorage({
+    destination: path.join(__dirname, '../ProducerPhotos'),
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+let upload = multer({
+    storage: storageEngine,
+    limits: {fileSize: 200000000}
+}).single('photo');
 
 let controller = {};
 
@@ -13,8 +27,7 @@ controller.getAll = async (req, res, next) => {
 };
 controller.getById = async (req, res, next) => {
     try{
-        let id = req.params.id;
-        let producer = await Producer.findById(id);
+        let producer = await Producer.findOne({_id: req.params.id});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -28,17 +41,51 @@ controller.create = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.uploadPhoto = async (req, res, next) => {
+    let producerToUpload = await Producer.findOne({_id: req.params.id});
+    try{
+        upload(req, res, async(err) => {
+            if(err) console.log(err);
+            producerToUpload.photo = req.file.filename;
+            producerToUpload.save();
+            console.log('Uploaded:' + producerToUpload);
+            res.status(200).json(producerToUpload);
+        });
+        
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 controller.update =async (req, res, next) => {
     try{
-        let producer = await Producer.findByIdAndUpdate({"_id": req.params.id}, req.body, {new: true});
+        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
+        let photo = producerWithPhoto.photo;
+        fs.unlink('./ProducerPhotos/' + photo, (err) => err);
+        let producer = await Producer.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.delete = async (req, res, next) => {
+controller.updatePhoto = async (req, res, next) => {
+    let producerToUpdate = await Producer.findOne({_id: req.params.id});
     try{
-        let producer = await Producer.findByIdAndRemove(req.params.id);
+        upload(req, res, async (err) => {
+            if(err) console.log(err);
+            producerToUpdate.photo = req.file.filename;
+            producerToUpdate.save();
+            res.status(200).json(producerToUpdate);
+        })
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
+controller.delete = async (req, res, next) => {
+
+    try{
+        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
+        fs.unlink('./ProducerPhotos/' + producerWithPhoto.photo, (err) => (err));
+        let producer = await Producer.findOneAndRemove({_id: req.params.id});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -46,7 +93,11 @@ controller.delete = async (req, res, next) => {
 };
 controller.deleteAll = async (req, res, next) => {
     try{
+        let producersWithPhotos = await Producer.find({});
         let producers = await Producer.deleteMany({}, (err) => {});
+        for(let producer of producersWithPhotos) {
+            fs.unlink('./ProducerPhotos/' + producer.photo, (err) => (err));
+        }
         res.status(200).json(producers);
         console.log(producers);
     }catch (e) {

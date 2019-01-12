@@ -96,6 +96,10 @@ controller.updateFile = async (req, res, next) => {
 controller.delete = async (req, res, next) => {
     try{
         let product = await Product.findByIdAndRemove(req.params.id);
+        let photos = product.photos;
+        for (let i = 0; i<photos.length; i++) {
+            fs.unlink('./photos/' + photos[i], (err) => (err));
+        }
         res.status(200).json(product);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -104,9 +108,16 @@ controller.delete = async (req, res, next) => {
 
 controller.deleteAll = async (req, res, next) => {
     try {
-
-        res.json(await Product.deleteMany({}, (err) => {
-        }));
+        let products = await Product.find({});
+        await Product.deleteMany({}, (err) => {});
+        for(let product of products) {
+            let photos = product.photos;
+            for(let i = 0; i<photos.length; i++){
+                fs.unlink('./photos/' + photos[i], (err) => (err));
+                console.log(photos[i]);
+            }
+        }
+        res.status(200).json(products);
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
