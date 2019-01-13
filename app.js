@@ -11,6 +11,7 @@ try {
     app.use(express.static('./photos'));
     app.use(express.static('./photosAbout'));
     app.use(express.static('./ProducerPhotos'));
+    app.use(express.static('./userPhotos'));
     app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));

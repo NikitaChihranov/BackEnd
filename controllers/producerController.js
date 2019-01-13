@@ -109,7 +109,7 @@ controller.viewAllProductsByProducer = async (req, res, next) => {
         let id = req.params.id;
         let producerToFind = await Producer.findOne({_id: id});
         let a = await Product.find({'producer': producerToFind.title});
-        res.status(200).json(a);x
+        res.status(200).json(a);
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }
