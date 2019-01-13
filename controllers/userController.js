@@ -49,7 +49,7 @@ controller.uploadPhoto = async (req, res, next) => {
             let photo = req.file.filename;
             user.photo = photo;
             user.save();
-            res.status(200).json(user);
+            res.status(200).json(user);x
         })
     }catch (e) {
         next(new ControllerError(e.message, 400));
