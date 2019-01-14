@@ -12,8 +12,7 @@ let UserSchema = new Schema({
         type: String
     },
     phone:{
-        type: String,
-
+        type: String
     },
     email:{
         type: String,

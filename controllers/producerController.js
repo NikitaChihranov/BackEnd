@@ -5,7 +5,7 @@ let multer = require('multer');
 let path = require('path');
 let fs = require('fs');
 let storageEngine = multer.diskStorage({
-    destination: path.join(__dirname, '../ProducerPhotos'),
+    destination: path.join(__dirname, '../public/ProducerPhotos'),
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -60,7 +60,7 @@ controller.update =async (req, res, next) => {
     try{
         let producerWithPhoto = await Producer.findOne({_id: req.params.id});
         let photo = producerWithPhoto.photo;
-        fs.unlink('./ProducerPhotos/' + photo, (err) => err);
+        fs.unlink('./public/ProducerPhotos/' + photo, (err) => err);
         let producer = await Producer.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
         res.status(200).json(producer);
     }catch (e) {
@@ -84,7 +84,7 @@ controller.delete = async (req, res, next) => {
 
     try{
         let producerWithPhoto = await Producer.findOne({_id: req.params.id});
-        fs.unlink('./ProducerPhotos/' + producerWithPhoto.photo, (err) => (err));
+        fs.unlink('./public/ProducerPhotos/' + producerWithPhoto.photo, (err) => (err));
         let producer = await Producer.findOneAndRemove({_id: req.params.id});
         res.status(200).json(producer);
     }catch (e) {
@@ -96,7 +96,7 @@ controller.deleteAll = async (req, res, next) => {
         let producersWithPhotos = await Producer.find({});
         let producers = await Producer.deleteMany({}, (err) => {});
         for(let producer of producersWithPhotos) {
-            fs.unlink('./ProducerPhotos/' + producer.photo, (err) => (err));
+            fs.unlink('./public/ProducerPhotos/' + producer.photo, (err) => (err));
         }
         res.status(200).json(producers);
         console.log(producers);

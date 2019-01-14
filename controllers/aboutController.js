@@ -5,7 +5,7 @@ let multer = require('multer');
 let path = require('path');
 let fs = require('fs');
 let storageEngine = multer.diskStorage({
-    destination: path.join(__dirname, '../photosAbout'),
+    destination: path.join(__dirname, '../public/photosAbout'),
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -56,7 +56,7 @@ controller.update = async (req, res, next) => {
         let aboutToUpdate = await About.find({});
         let id = aboutToUpdate[0]._id;
         let logo = aboutToUpdate[0].logo;
-        fs.unlink('./photosAbout/' + logo, (err) => (err));
+        fs.unlink('./public/photosAbout/' + logo, (err) => (err));
         let obj = await About.findByIdAndUpdate(id, req.body, {new: true});
         res.status(200).json(obj);
     } catch (e) {
@@ -84,7 +84,7 @@ controller.delete = async (req, res, next) => {
     try {
         let aboutToDelete = await About.find({});
         let logo = aboutToDelete[0].logo;
-        fs.unlink('./photosAbout/' + logo, (err) => (err));
+        fs.unlink('./public/photosAbout/' + logo, (err) => (err));
         let id = aboutToDelete[0]._id;
         await About.findByIdAndRemove(id);
         let about = new About();

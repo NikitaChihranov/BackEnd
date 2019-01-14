@@ -3,15 +3,14 @@ let mongoose = require('mongoose');
 let cors = require('cors');
 let MainRouter = require('./routes/index');
 let ControllerError = require('./errors/ControllerError');
+let path = require('path');
+
 
 
 mongoose.connect('mongodb://localhost:27017/shopDB', {useNewUrlParser: true});
 try {
     let app = express();
-    app.use(express.static('./photos'));
-    app.use(express.static('./photosAbout'));
-    app.use(express.static('./ProducerPhotos'));
-    app.use(express.static('./userPhotos'));
+    app.use(express.static(path.join(__dirname, 'public')));
     app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));

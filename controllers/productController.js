@@ -5,7 +5,7 @@ let controller = {};
 let multer = require('multer');
 let path = require('path');
 let storageEngine = multer.diskStorage({
-    destination: path.join(__dirname, '../photos'),
+    destination: path.join(__dirname, '../public/photos'),
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -98,7 +98,7 @@ controller.delete = async (req, res, next) => {
         let product = await Product.findByIdAndRemove(req.params.id);
         let photos = product.photos;
         for (let i = 0; i<photos.length; i++) {
-            fs.unlink('./photos/' + photos[i], (err) => (err));
+            fs.unlink('./public/photos/' + photos[i], (err) => (err));
         }
         res.status(200).json(product);
     }catch (e) {
@@ -113,7 +113,7 @@ controller.deleteAll = async (req, res, next) => {
         for(let product of products) {
             let photos = product.photos;
             for(let i = 0; i<photos.length; i++){
-                fs.unlink('./photos/' + photos[i], (err) => (err));
+                fs.unlink('./public/photos/' + photos[i], (err) => (err));
                 console.log(photos[i]);
             }
         }
