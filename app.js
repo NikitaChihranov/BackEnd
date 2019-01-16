@@ -4,8 +4,9 @@ let cors = require('cors');
 let MainRouter = require('./routes/index');
 let ControllerError = require('./errors/ControllerError');
 let path = require('path');
-
-
+let session = require('express-session');
+require('./config/passport');
+let passport = require('passport');
 
 mongoose.connect('mongodb://localhost:27017/shopDB', {useNewUrlParser: true});
 try {
@@ -14,6 +15,12 @@ try {
     app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
+    app.use(session({
+        secret: 'lkfhvkxlnklsdalkfjhasljkdlioslkjdhfljalknlkanoaijrvoivoi',
+        resave: false,
+        saveUninitialized: false}));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(MainRouter);
 
 

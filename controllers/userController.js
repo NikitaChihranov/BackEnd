@@ -16,7 +16,14 @@ let upload = multer({
 }).single('photo');
 
 let controller = {};
-
+controller.signin = async (req, res, next) => {
+    if (req.user) {
+        console.log(req.user);
+        res.status(200).json(req.user);
+    } else {
+        console.log('Incorrect login or password');
+    }
+}
 controller.getAll = async (req, res, next) => {
     try {
         res.status(200).json(await User.find({}));
@@ -35,7 +42,9 @@ controller.getById = async (req, res, next) => {
 };
 controller.create = async (req, res, next) => {
     try{
+        console.log('Request user:' +req.user);
         let user = await User.create(req.body);
+        console.log(user);
         res.status(201).json(user);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -49,7 +58,7 @@ controller.uploadPhoto = async (req, res, next) => {
             let photo = req.file.filename;
             user.photo = photo;
             user.save();
-            res.status(200).json(user);x
+            res.status(200).json(user);
         })
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -96,6 +105,18 @@ controller.deleteAll = async (req, res, next) => {
         }
         res.json(await User.deleteMany({}, (err) => {}));
     } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
+controller.isAuthenticated = async (req, res, next) => {
+    console.log(req.user);
+    try {
+        if (req.user) {
+            next();
+        } else {
+            console.log('You don`t have roots to do it');
+        }
+    }catch(e) {
         console.log(e);
         next(new ControllerError(e.message, 400));
     }
