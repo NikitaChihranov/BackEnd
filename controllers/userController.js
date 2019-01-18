@@ -41,6 +41,7 @@ controller.getById = async (req, res, next) => {
     }
 };
 controller.create = async (req, res, next) => {
+    console.log('111');
     try{
         console.log('Request user:' +req.user);
         let user = await User.create(req.body);
@@ -110,15 +111,10 @@ controller.deleteAll = async (req, res, next) => {
 }
 controller.isAuthenticated = async (req, res, next) => {
     console.log(req.user);
-    try {
         if (req.user) {
             next();
         } else {
             console.log('You don`t have roots to do it');
         }
-    }catch(e) {
-        console.log(e);
-        next(new ControllerError(e.message, 400));
-    }
 }
 module.exports = controller;

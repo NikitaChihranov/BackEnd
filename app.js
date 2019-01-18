@@ -7,17 +7,18 @@ let path = require('path');
 let session = require('express-session');
 require('./config/passport');
 let passport = require('passport');
-
+let morgan = require('morgan');
 mongoose.connect('mongodb://localhost:27017/shopDB', {useNewUrlParser: true});
 try {
     let app = express();
+     app.use(morgan('dev'));
+    app.use(cors({origin: true, credentials: true}));
     app.use(express.static(path.join(__dirname, 'public')));
-    app.use(cors({origin: true}))
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
     app.use(session({
         secret: 'lkfhvkxlnklsdalkfjhasljkdlioslkjdhfljalknlkanoaijrvoivoi',
-        resave: false,
+        resave: true,
         saveUninitialized: false}));
     app.use(passport.initialize());
     app.use(passport.session());

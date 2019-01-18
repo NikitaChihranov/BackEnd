@@ -13,7 +13,11 @@ strategies.SignIn = new LocalStrategy(
             let principal = await User.findOne({
                 login, password
             });
-            if (principal) return done(null, principal);
+
+            if (principal) {
+                console.log('passport local works principal');
+                return done(null, principal);
+            }
             else{
                 console.log('Incorrect login or password');
                 return done(false, null);

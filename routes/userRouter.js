@@ -3,14 +3,14 @@ let UserController = require('../controllers/userController');
 require('../config/passport');
 let passport = require('passport');
 
-router.post('/signin',passport.authenticate('local.signin', {failureRedirect: '/'}), UserController.signin);
-router.get('/', UserController.getAll);
+router.post('/signin', passport.authenticate('local.signin', {failureRedirect: '/'}), UserController.signin);
+router.get('/',  UserController.getAll);
 router.get('/:id', UserController.isAuthenticated, UserController.getById);
 router.post('/',  UserController.create);
-router.post('/uploadPhoto/:id',  UserController.uploadPhoto);
-router.put('/:id', UserController.isAuthenticated,  UserController.update);
+router.post('/uploadPhoto/:id' , UserController.uploadPhoto);
+router.put('/:id',UserController.isAuthenticated,  UserController.update);
 router.put('/updatePhoto/:id', UserController.isAuthenticated, UserController.updatePhoto);
-router.delete('/:id', UserController.isAuthenticated, UserController.delete);
-router.post('/deleteAll', UserController.deleteAll);
+router.delete('/:id',UserController.isAuthenticated, UserController.delete);
+router.post('/deleteAll',UserController.deleteAll);
 
 module.exports = router;
