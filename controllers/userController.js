@@ -41,11 +41,19 @@ controller.getById = async (req, res, next) => {
     }
 };
 controller.create = async (req, res, next) => {
-    console.log('111');
     try{
-        console.log('Request user:' +req.user);
         let user = await User.create(req.body);
-        console.log(user);
+        res.status(201).json(user);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.createAdmin = async (req, res, next) => {
+    try{
+        let user = await User.create(req.body);
+        user.admin = true;
+        user.save();
+        console.log('user works' + user);
         res.status(201).json(user);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -114,7 +122,7 @@ controller.isAuthenticated = async (req, res, next) => {
         if (req.user) {
             next();
         } else {
-            console.log('You don`t have roots to do it');
+            console.log('You dont have roots');
         }
 }
 module.exports = controller;

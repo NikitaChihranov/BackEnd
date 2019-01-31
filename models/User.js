@@ -21,14 +21,11 @@ let UserSchema = new Schema({
         type: String
     },
     email:{
-        type: String,
-
+        type: String
     },
-    adress:{
+    adress: {
         type: String,
-
-    },
-    
+    }
 });
 
 module.exports = mongoose.model('User', UserSchema);

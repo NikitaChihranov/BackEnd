@@ -16,7 +16,7 @@ let upload = multer({
     limits: {fileSize: 200000000}
 }).array('photos');
 
-controller.getAll= async (req, res, next) => {
+controller.getAll = async (req, res, next) => {
         try {
             res.status(200).json(await Product.find({}));
         }catch (e) {
