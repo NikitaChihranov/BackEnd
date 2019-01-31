@@ -17,11 +17,12 @@ let upload = multer({
 
 let controller = {};
 controller.signin = async (req, res, next) => {
-    if (req.user) {
-        console.log(req.user);
-        res.status(200).json(req.user);
-    } else {
+    if (req.user.firstName === 'not found') {
         console.log('Incorrect login or password');
+        let a = new User({ firstName: 'not found'});
+        res.status(200).json(a);
+    } else {
+        res.status(200).json(req.user);
     }
 }
 controller.getAll = async (req, res, next) => {

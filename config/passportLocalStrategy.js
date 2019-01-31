@@ -13,17 +13,17 @@ strategies.SignIn = new LocalStrategy(
             let principal = await User.findOne({
                 login, password
             });
-
-            if (principal) {
-                console.log('passport local works principal');
+            if (principal && principal.admin === false) {
+                console.log('ADMIN FALSE');
                 return done(null, principal);
             }
-            else{
-                console.log('Incorrect login or password');
-                return done(false, null);
+            else if(principal.admin === true) {
+                console.log('You`re admin');
+                return done(null, principal);
             }
         }catch(e) {
-            return done(e);
+            console.log('Incorrect login or password');
+            return done(null, new User({firstName:'not found'}));
         }
 }
 );
@@ -41,7 +41,6 @@ strategies.SignUp = new LocalStrategy(
             if (alreadyExists) {
                 return done(false, null);
             } else {
-                console.log;
                 let user = await User.create(req.body);
                 return done(null, user);
             }
