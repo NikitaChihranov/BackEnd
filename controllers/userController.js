@@ -38,7 +38,7 @@ controller.getById = async (req, res, next) => {
         let user = await User.findById(id);
         res.status(200).json(user);
     }catch (e) {
-        next(new ControllerError(e.message, 400));
+        next(new ControllerError    (e.message, 400));
     }
 };
 controller.create = async (req, res, next) => {
