@@ -19,8 +19,8 @@ let controller = {};
 controller.signin = async (req, res, next) => {
     if (req.user.firstName === 'not found') {
         console.log('Incorrect login or password');
-        let a = new User({ firstName: 'not found'});
-        res.status(200).json(a);
+        let user = new User({ firstName: 'not found'});
+        res.status(200).json(user);
     } else {
         res.status(200).json(req.user);
     }
@@ -38,13 +38,25 @@ controller.getById = async (req, res, next) => {
         let user = await User.findById(id);
         res.status(200).json(user);
     }catch (e) {
-        next(new ControllerError    (e.message, 400));
+        next(new ControllerError (e.message, 400));
     }
 };
 controller.create = async (req, res, next) => {
     try{
-        let user = await User.create(req.body);
-        res.status(201).json(user);
+        if(req.body.login!==''&&req.body.password!=='') {
+            let alreadyExists = await User.findOne({login: req.body.login});
+            if (alreadyExists) {
+                let user = new User({firstName: 'Already exists!'});
+                res.status(201).json(user);
+            } else {
+                let user = await User.create(req.body);
+                res.status(201).json(user);
+            }
+        }
+        else{
+            let user = new User({firstName: 'err'});
+            res.status(201).json(user);
+        }
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }
@@ -62,16 +74,19 @@ controller.createAdmin = async (req, res, next) => {
 };
 controller.uploadPhoto = async (req, res, next) => {
     let user = await User.findOne({_id: req.params.id});
-    try{
+    if(user) {
         upload(req, res, (err) => {
-            if(err) console.log(err);
-            let photo = req.file.filename;
-            user.photo = photo;
-            user.save();
-            res.status(200).json(user);
+            if (err) console.log(err);
+                let photo = req.file.filename;
+                user.photo = photo;
+                user.save();
+                res.status(200).json(user);
         })
-    }catch (e) {
-        next(new ControllerError(e.message, 400));
+    }else{
+        user.photo = 'Photo doesn`t exist';
+        user.save();
+        console.log('User: ' + user);
+        res.status(201).json(user);
     }
 }
 controller.update = async (req, res, next) => {
