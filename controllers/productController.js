@@ -23,10 +23,9 @@ controller.getAll = async (req, res, next) => {
             next(new ControllerError(e.message, 400));
         }
 };
-controller.getById = async (req, res, next) => {
+controller.getByName = async (req, res, next) => {
     try{
-        let id = req.params.id;
-        let product = await Product.findById(id);
+        let product = await Product.findOne({title: req.params.name});
         res.status(200).json(product);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -56,13 +55,13 @@ controller.uploadFile = async (req, res, next) => {
 };
 controller.update = async (req, res, next) => {
     try {
-        let productWithPhotos = await Product.findById(req.params.id);
+        let productWithPhotos = await Product.findOne({title: req.params.name});
         let photos = productWithPhotos.photos;
         for (let i = 0; i<photos.length; i++) {
             fs.unlink('./photos/' + photos[i], (err) => (err));
             console.log(photos[i]);
         }
-        let product = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        let product = await Product.findOneAndUpdate({title: req.params.name}, req.body, {new: true});
         console.log(product);
         res.status(200).json(product);
     }catch (e) {

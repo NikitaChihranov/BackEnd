@@ -33,14 +33,6 @@ let ProductSchema = new Schema({
     },
     producer:{
         type: String
-    },
-    show:{
-        type: Boolean,
-        default: 0
-    },
-    sale:{
-        type: Boolean,
-        default: 0
     }
 });
 
