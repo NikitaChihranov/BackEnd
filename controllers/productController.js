@@ -65,19 +65,18 @@ controller.update = async (req, res, next) => {
         console.log(product);
         res.status(200).json(product);
     }catch (e) {
-            next(new ControllerError(e.message, 400));
+        next(new ControllerError(e.message, 400));
     }
 }
 controller.updateFile = async (req, res, next) => {
     try {
-        let productToUpdate = await Product.findById(req.params.id);
+        let productToUpdate = await Product.findOne({id: req.params.id});
         upload(req, res, async (err) => {
             if (err) console.log(err);
             let photosToUpload = [];
             for (const photo of req.files) {
                 photosToUpload.push(photo.filename);
             }
-            console.log('Photos to upload: ' + photosToUpload);
             let a = req.files.length;
             for (let q = 0; q < a; q++) {
                 productToUpdate.photos.splice(q);
@@ -94,7 +93,7 @@ controller.updateFile = async (req, res, next) => {
 
 controller.delete = async (req, res, next) => {
     try{
-        let product = await Product.findByIdAndRemove(req.params.id);
+        let product = await Product.findOneAndRemove({title: req.params.name});
         let photos = product.photos;
         for (let i = 0; i<photos.length; i++) {
             fs.unlink('./public/photos/' + photos[i], (err) => (err));

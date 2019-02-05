@@ -25,9 +25,9 @@ controller.getAll = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.getById = async (req, res, next) => {
+controller.getByName = async (req, res, next) => {
     try{
-        let producer = await Producer.findOne({_id: req.params.id});
+        let producer = await Producer.findOne({title: req.params.name});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
