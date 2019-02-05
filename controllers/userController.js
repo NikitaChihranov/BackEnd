@@ -68,11 +68,24 @@ controller.create = async (req, res, next) => {
 };
 controller.createAdmin = async (req, res, next) => {
     try {
-        let user = await User.create(req.body);
-        user.admin = true;
-        user.save();
-        console.log('user works' + user);
-        res.status(201).json(user);
+        if (req.body.login !== '' && req.body.password !== '') {
+            let alreadyExists = await User.findOne({login: req.body.login});
+            if (alreadyExists) {
+                let user = new User({firstName: 'Already exists!'});
+                res.status(201).json(user);
+            } else {
+                let user = await User.create(req.body);
+                user.admin = true;
+                if (user.photo == undefined) {
+                    user.photo = 'no photo';
+                }
+                user.save();
+                res.status(200).json(user);
+            }
+        } else {
+            let user = new User({firstName: 'err'});
+            res.status(201).json(user);
+        }
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
@@ -122,11 +135,12 @@ controller.delete = async (req, res, next) => {
 };
 controller.deleteAll = async (req, res, next) => {
     try {
-        let users = await User.find({});
+        let users = await User.find({admin: false});
+        console.log(users);
         for (let user of users) {
             fs.unlink('./public/userPhotos/' + user.photo, (err) => (err));
         }
-        res.json(await User.deleteMany({}, (err) => {
+        res.json(await User.deleteMany({admin: false}, (err) => {
         }));
     } catch (e) {
         next(new ControllerError(e.message, 400));

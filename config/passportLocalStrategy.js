@@ -45,7 +45,6 @@ strategies.SignUp = new LocalStrategy(
                 return done(null, user);
             }
         }catch(e){
-            console.log('e:' + e);
             return done(e);
         }
     }
