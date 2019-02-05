@@ -25,10 +25,7 @@ controller.signin = async (req, res, next) => {
     }
 };
 controller.logout = async (req, res, next) => {
-    console.log('logout');
-    console.log(req.user);
     req.logout();
-    console.log(req.user);
 };
 controller.getAll = async (req, res, next) => {
     try {
