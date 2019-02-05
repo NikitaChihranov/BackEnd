@@ -23,7 +23,13 @@ controller.signin = async (req, res, next) => {
     } else {
         res.status(200).json(req.user);
     }
-}
+};
+controller.logout = async (req, res, next) => {
+    console.log('logout');
+    console.log(req.user);
+    req.logout();
+    console.log(req.user);
+};
 controller.getAll = async (req, res, next) => {
     try {
         res.status(200).json(await User.find({}));
@@ -31,10 +37,9 @@ controller.getAll = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.getById = async (req, res, next) => {
+controller.getByLogin = async (req, res, next) => {
     try {
-        let id = req.params.id;
-        let user = await User.findById(id);
+        let user = await User.findOne({login: req.params.login});
         res.status(200).json(user);
     } catch (e) {
         next(new ControllerError(e.message, 400));
@@ -124,14 +129,21 @@ controller.updatePhoto = async (req, res, next) => {
     }
 }
 controller.delete = async (req, res, next) => {
-    try {
-        let userWithPhoto = await User.findOne({_id: req.params.id});
-        fs.unlink('./public/userPhotos/' + userWithPhoto.photo, (err) => (err));
-        let user = await User.findByIdAndRemove(req.params.id);
-        res.status(200).json(user);
-    } catch (e) {
-        next(new ControllerError(e.message, 400));
-    }
+        let userWithPhoto = await User.findOne({login: req.params.login});
+        if(userWithPhoto!=null) {
+            if (userWithPhoto.login === req.user.login) {
+                console.log('You can`t delete yourself here!!!');
+                let user = new User({firstName: 'can`t delete'});
+                res.status(201).json(user);
+            } else {
+                fs.unlink('./public/userPhotos/' + userWithPhoto.photo, (err) => (err));
+                let user = await User.findByIdAndRemove(userWithPhoto._id);
+                res.status(200).json(user);
+            }
+        }else{
+            let user = new User({firstName: 'nothing to delete'});
+            res.status(201).json(user);
+        }
 };
 controller.deleteAll = async (req, res, next) => {
     try {
@@ -142,6 +154,16 @@ controller.deleteAll = async (req, res, next) => {
         }
         res.json(await User.deleteMany({admin: false}, (err) => {
         }));
+    } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.deleteProfile = async (req, res, next) => {
+    try{
+        console.log('controller works');
+        let user = await User.findOneAndRemove({login: req.user.login});
+        res.status(200).json(user);
+        next();
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
