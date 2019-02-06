@@ -10,15 +10,6 @@ controller.getAll = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.getById = async (req, res, next) => {
-    try{
-        let id = req.params.id;
-        let category = await Category.findById(id);
-        res.status(200).json(category);
-    }catch (e) {
-        next(new ControllerError(e.message, 400));
-    }
-};
 controller.create = async (req, res, next) => {
     try{
         let category = await Category.create(req.body);
@@ -37,8 +28,13 @@ controller.update =async (req, res, next) => {
 };
 controller.delete = async (req, res, next) => {
     try{
-        let category = await Category.findByIdAndRemove(req.params.id);
-        res.status(200).json(category);
+        let category = await Category.findOneAndRemove({title: req.params.name});
+        if(category === null){
+            let noFound = new Category({title: 'err'});
+            res.status(201).json(noFound);
+        } else {
+            res.status(200).json(category);
+        }
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }
