@@ -48,7 +48,6 @@ controller.uploadPhoto = async (req, res, next) => {
             if(err) console.log(err);
             producerToUpload.photo = req.file.filename;
             producerToUpload.save();
-            console.log('Uploaded:' + producerToUpload);
             res.status(200).json(producerToUpload);
         });
         
@@ -58,10 +57,10 @@ controller.uploadPhoto = async (req, res, next) => {
 }
 controller.update =async (req, res, next) => {
     try{
-        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
+        let producerWithPhoto = await Producer.findOne({title: req.params.name});
         let photo = producerWithPhoto.photo;
         fs.unlink('./public/ProducerPhotos/' + photo, (err) => err);
-        let producer = await Producer.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
+        let producer = await Producer.findOneAndUpdate({title: req.params.name}, req.body, {new: true});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -70,7 +69,7 @@ controller.update =async (req, res, next) => {
 controller.updatePhoto = async (req, res, next) => {
     let producerToUpdate = await Producer.findOne({_id: req.params.id});
     try{
-        upload(req, res, async (err) => {
+        upload(req, res, (err) => {
             if(err) console.log(err);
             producerToUpdate.photo = req.file.filename;
             producerToUpdate.save();
@@ -81,11 +80,10 @@ controller.updatePhoto = async (req, res, next) => {
     }
 }
 controller.delete = async (req, res, next) => {
-
     try{
-        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
+        let producerWithPhoto = await Producer.findOne({title: req.params.name});
         fs.unlink('./public/ProducerPhotos/' + producerWithPhoto.photo, (err) => (err));
-        let producer = await Producer.findOneAndRemove({_id: req.params.id});
+        let producer = await Producer.findOneAndRemove({title: req.params.name});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
