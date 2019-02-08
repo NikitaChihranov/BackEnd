@@ -134,7 +134,6 @@ controller.delete = async (req, res, next) => {
     let userWithPhoto = await User.findOne({login: req.params.login});
     if (userWithPhoto != null) {
         if (userWithPhoto.login === req.user.login) {
-            console.log('You can`t delete yourself here!!!');
             let user = new User({firstName: 'can`t delete'});
             res.status(201).json(user);
         } else {
@@ -162,7 +161,6 @@ controller.deleteAll = async (req, res, next) => {
 };
 controller.deleteProfile = async (req, res, next) => {
     try {
-        console.log('controller works');
         let user = await User.findOneAndRemove({login: req.user.login});
         res.status(200).json(user);
         next();
@@ -171,7 +169,6 @@ controller.deleteProfile = async (req, res, next) => {
     }
 }
 controller.isAuthenticated = async (req, res, next) => {
-    console.log(req.user);
     if (req.user) {
         next();
     } else {

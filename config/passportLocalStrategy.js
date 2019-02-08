@@ -36,7 +36,6 @@ strategies.SignUp = new LocalStrategy(
     },
     async function (req, login, password, done) {
         try {
-            console.log('passport works');
             let alreadyExists = await User.findOne({login});
             if (alreadyExists) {
                 return done(false, null);
