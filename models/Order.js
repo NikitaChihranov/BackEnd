@@ -2,29 +2,25 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let OrderSchema = new Schema({
-    products: [
+    product:
         {
             type: Schema.ObjectId,
             ref: 'Product'
-        }
-    ],
+        },
     date: {
         type: Date,
         default: new Date()
     },
-    user:{
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
+    name: String,
+    surname: String,
     delivery: {
         address: String,
-        phone: String
+        phone: String,
+        price: Number
     },
     details: String,
-    payment: {
-        type: Schema.ObjectId,
-        ref: 'Payment'
-    }
+    paymentType: String,
+    totalPrice: Number
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

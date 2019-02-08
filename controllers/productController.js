@@ -31,6 +31,14 @@ controller.getByName = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.getById = async (req, res, next) => {
+    try{
+        let product = await Product.findOne({_id: req.params.id});
+        res.status(200).json(product);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
 controller.create = async (req, res, next) => {
     try{
         let product = await Product.create(req.body);
