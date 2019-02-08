@@ -18,14 +18,6 @@ controller.create = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.update =async (req, res, next) => {
-    try{
-        let category = await Category.findByIdAndUpdate(req.params.id, req.body, {new: true});
-        res.status(200).json(category);
-    }catch (e) {
-        next(new ControllerError(e.message, 400));
-    }
-};
 controller.delete = async (req, res, next) => {
     try{
         let category = await Category.findOneAndRemove({title: req.params.name});
