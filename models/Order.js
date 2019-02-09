@@ -13,10 +13,8 @@ let OrderSchema = new Schema({
     },
     name: String,
     surname: String,
-    delivery: {
-        address: String,
-        phone: String
-    },
+    addressDelivery: String,
+    phoneNumber: String,
     details: String,
     paymentType: String,
     totalPrice: Number
