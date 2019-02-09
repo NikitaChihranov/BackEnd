@@ -17,33 +17,38 @@ let upload = multer({
 }).array('photos');
 
 controller.getAll = async (req, res, next) => {
-        try {
-            res.status(200).json(await Product.find({}));
-        }catch (e) {
-            next(new ControllerError(e.message, 400));
-        }
+    try {
+        res.status(200).json(await Product.find({}));
+    } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
 };
 controller.getByName = async (req, res, next) => {
-    try{
+    try {
         let product = await Product.findOne({title: req.params.name});
-        res.status(200).json(product);
-    }catch (e) {
+        if (product != null) {
+            res.status(200).json(product);
+        }else{
+            let noExist = new Product({title: 'err'});
+            res.status(201).json(noExist);
+        }
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
 controller.getById = async (req, res, next) => {
-    try{
+    try {
         let product = await Product.findOne({_id: req.params.id});
         res.status(200).json(product);
-    }catch (e) {
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
 controller.create = async (req, res, next) => {
-    try{
+    try {
         let product = await Product.create(req.body);
         res.status(201).json(product);
-    }catch (e) {
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
@@ -65,14 +70,14 @@ controller.update = async (req, res, next) => {
     try {
         let productWithPhotos = await Product.findOne({title: req.params.name});
         let photos = productWithPhotos.photos;
-        for (let i = 0; i<photos.length; i++) {
+        for (let i = 0; i < photos.length; i++) {
             fs.unlink('./photos/' + photos[i], (err) => (err));
             console.log(photos[i]);
         }
         let product = await Product.findOneAndUpdate({title: req.params.name}, req.body, {new: true});
         console.log(product);
         res.status(200).json(product);
-    }catch (e) {
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 }
@@ -94,20 +99,20 @@ controller.updateFile = async (req, res, next) => {
             console.log('Updated product: ' + productToUpdate);
             res.status(200).json(productToUpdate);
         });
-    }catch(e) {
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 }
 
 controller.delete = async (req, res, next) => {
-    try{
+    try {
         let product = await Product.findOneAndRemove({title: req.params.name});
         let photos = product.photos;
-        for (let i = 0; i<photos.length; i++) {
+        for (let i = 0; i < photos.length; i++) {
             fs.unlink('./public/photos/' + photos[i], (err) => (err));
         }
         res.status(200).json(product);
-    }catch (e) {
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };
@@ -115,10 +120,11 @@ controller.delete = async (req, res, next) => {
 controller.deleteAll = async (req, res, next) => {
     try {
         let products = await Product.find({});
-        await Product.deleteMany({}, (err) => {});
-        for(let product of products) {
+        await Product.deleteMany({}, (err) => {
+        });
+        for (let product of products) {
             let photos = product.photos;
-            for(let i = 0; i<photos.length; i++){
+            for (let i = 0; i < photos.length; i++) {
                 fs.unlink('./public/photos/' + photos[i], (err) => (err));
                 console.log(photos[i]);
             }
