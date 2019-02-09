@@ -4,9 +4,9 @@ let Schema = mongoose.Schema;
 let OrderSchema = new Schema({
     product:
         {
-            type: Schema.ObjectId,
-            ref: 'Product'
+            type: String
         },
+    userId: String,
     date: {
         type: Date,
         default: new Date()
@@ -15,8 +15,7 @@ let OrderSchema = new Schema({
     surname: String,
     delivery: {
         address: String,
-        phone: String,
-        price: Number
+        phone: String
     },
     details: String,
     paymentType: String,

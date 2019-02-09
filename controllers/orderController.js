@@ -19,6 +19,14 @@ controller.getById = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.getOrdersByUser = async (req, res, next) => {
+    try{
+        let orders = await Order.find({userId: req.params.id});
+        res.status(200).json(orders);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 controller.create = async (req, res, next) => {
     try{
         let order = await Order.create(req.body);
