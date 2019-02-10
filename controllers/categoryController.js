@@ -20,13 +20,8 @@ controller.create = async (req, res, next) => {
 };
 controller.delete = async (req, res, next) => {
     try{
-        let category = await Category.findOneAndRemove({title: req.params.name});
-        if(category === null){
-            let noFound = new Category({title: 'err'});
-            res.status(201).json(noFound);
-        } else {
-            res.status(200).json(category);
-        }
+        let category = await Category.findOneAndRemove({_id: req.params.id});
+        res.status(200).json(category);
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }

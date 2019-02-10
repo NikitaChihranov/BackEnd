@@ -83,7 +83,7 @@ controller.update = async (req, res, next) => {
 }
 controller.updateFile = async (req, res, next) => {
     try {
-        let productToUpdate = await Product.findOne({id: req.params.id});
+        let productToUpdate = await Product.findOne({_id: req.params.id});
         upload(req, res, async (err) => {
             if (err) console.log(err);
             let photosToUpload = [];
@@ -96,7 +96,6 @@ controller.updateFile = async (req, res, next) => {
             }
             productToUpdate.photos = photosToUpload;
             productToUpdate.save();
-            console.log('Updated product: ' + productToUpdate);
             res.status(200).json(productToUpdate);
         });
     } catch (e) {
@@ -106,7 +105,7 @@ controller.updateFile = async (req, res, next) => {
 
 controller.delete = async (req, res, next) => {
     try {
-        let product = await Product.findOneAndRemove({title: req.params.name});
+        let product = await Product.findOneAndRemove({_id: req.params.id});
         let photos = product.photos;
         for (let i = 0; i < photos.length; i++) {
             fs.unlink('./public/photos/' + photos[i], (err) => (err));

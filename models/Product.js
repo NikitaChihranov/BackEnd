@@ -25,9 +25,6 @@ let ProductSchema = new Schema({
         type: String,
         default: new Date()
     },
-    gender:{
-        type: String
-    },
     category:{
         type: String
     },

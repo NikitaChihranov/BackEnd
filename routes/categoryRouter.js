@@ -3,7 +3,7 @@ let CategoryController = require('../controllers/categoryController');
 
 router.get('/', CategoryController.getAll);
 router.post('/', CategoryController.create);
-router.delete('/:name', CategoryController.delete);
+router.delete('/:id', CategoryController.delete);
 router.post('/deleteAll', CategoryController.deleteAll);
 router.get('/viewAll/:id', CategoryController.viewAll);
 
