@@ -68,13 +68,13 @@ controller.uploadFile = async (req, res, next) => {
 };
 controller.update = async (req, res, next) => {
     try {
-        let productWithPhotos = await Product.findOne({title: req.params.name});
+        let productWithPhotos = await Product.findOne({_id: req.params.id});
         let photos = productWithPhotos.photos;
         for (let i = 0; i < photos.length; i++) {
             fs.unlink('./photos/' + photos[i], (err) => (err));
             console.log(photos[i]);
         }
-        let product = await Product.findOneAndUpdate({title: req.params.name}, req.body, {new: true});
+        let product = await Product.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
         console.log(product);
         res.status(200).json(product);
     } catch (e) {
