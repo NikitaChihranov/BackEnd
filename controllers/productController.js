@@ -60,7 +60,6 @@ controller.uploadFile = async (req, res, next) => {
         for (const photo of req.files) {
             photosToUpload.push(photo.filename);
         }
-        console.log('Photos to upload: ' + photosToUpload);
         product.photos = photosToUpload;
         product.save();
         res.status(200).json(product);
