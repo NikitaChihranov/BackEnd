@@ -1,5 +1,6 @@
 let ControllerError = require('../errors/ControllerError');
 let Order = require('../models/Order');
+let Product = require('../models/Product');
 
 let controller = {};
 
@@ -24,6 +25,16 @@ controller.getOrdersByUser = async (req, res, next) => {
         let orders = await Order.find({userId: req.params.id});
         console.log(orders);
         res.status(200).json(orders);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.getAmountOfOrdersByProduct = async (req, res, next) => {
+    try{
+        let product = await Product.findOne({_id: req.params.id});
+        console.log(product.title);
+        let orders= await Order.find({product: product.title});
+        res.status(200).json(orders.length);
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }

@@ -5,6 +5,7 @@ let ProductSchema = new Schema({
     title:{
         type: String,
     },
+    userIdAuthor: String,
     price:{
         type: Number,
     },

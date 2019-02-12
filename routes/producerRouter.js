@@ -3,12 +3,13 @@ let ProducerController = require('../controllers/producerController');
 
 router.get('/', ProducerController.getAll);
 router.get('/:name', ProducerController.getByName);
+router.get('/author/:id', ProducerController.getProducerByAuthor);
 router.post('/', ProducerController.create);
 router.post('/uploadPhoto/:id', ProducerController.uploadPhoto);
 router.put('/:name', ProducerController.update);
 router.put('/updatePhoto/:id', ProducerController.updatePhoto);
 router.delete('/:name', ProducerController.delete);
 router.delete('/', ProducerController.deleteAll);
-router.get('/viewAll/:id', ProducerController.viewAllProductsByProducer)
+router.get('/viewAll/:id', ProducerController.viewAllProductsByProducer);
 
 module.exports = router;

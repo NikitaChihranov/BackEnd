@@ -36,6 +36,15 @@ controller.getByName = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.getProductsByAuthor = async(req, res, next) => {
+    try{
+        let products = await Product.find({userIdAuthor: req.params.id});
+        console.log(products);
+        res.status(200).json(products);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
 controller.getById = async (req, res, next) => {
     try {
         let product = await Product.findOne({_id: req.params.id});

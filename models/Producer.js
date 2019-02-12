@@ -8,7 +8,12 @@ let ProducerSchema = new Schema({
         all: String
     },
     photo: String,
-    country: String
+    country: String,
+    userIdAuthor: String,
+    date: {
+        type: String,
+        default: new Date()
+    }
 });
 
 module.exports = mongoose.model('Producer', ProducerSchema);

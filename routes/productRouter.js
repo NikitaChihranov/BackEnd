@@ -4,6 +4,7 @@ let ProductController = require('../controllers/productController');
 router.get('/', ProductController.getAll);
 router.get('/:name', ProductController.getByName);
 router.get('/id/:id', ProductController.getById);
+router.get('/author/:id', ProductController.getProductsByAuthor);
 router.post('/', ProductController.create);
 router.put('/:id', ProductController.update);
 router.delete('/:id', ProductController.delete);

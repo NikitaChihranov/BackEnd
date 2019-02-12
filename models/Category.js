@@ -8,7 +8,12 @@ let CategorySchema = new Schema({
     photo: {
         type: Schema.ObjectId,
         ref: 'Photo'
-    }
+    },
+    date:{
+        type: String,
+        default: new Date()
+    },
+    userIdAuthor: String
 });
 
 module.exports = mongoose.model('Category', CategorySchema);

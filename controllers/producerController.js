@@ -33,6 +33,15 @@ controller.getByName = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.getProducerByAuthor = async(req, res, next) => {
+    try{
+        let producers = await Producer.find({userIdAuthor: req.params.id});
+        console.log(producers);
+        res.status(200).json(producers);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 controller.create = async (req, res, next) => {
     try{
         let producer = await Producer.create(req.body);

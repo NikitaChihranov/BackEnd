@@ -8,6 +8,10 @@ let UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    superAdmin:{
+        type: Boolean,
+        default: false
+    },
     firstName:{
         type: String,
     },
