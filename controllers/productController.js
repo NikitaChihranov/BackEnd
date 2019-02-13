@@ -133,7 +133,6 @@ controller.deleteAll = async (req, res, next) => {
             let photos = product.photos;
             for (let i = 0; i < photos.length; i++) {
                 fs.unlink('./public/photos/' + photos[i], (err) => (err));
-                console.log(photos[i]);
             }
         }
         res.status(200).json(products);

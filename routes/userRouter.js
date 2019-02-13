@@ -5,6 +5,7 @@ let passport = require('passport');
 
 router.post('/signin', passport.authenticate('local.signin', {failureRedirect: '/'}), UserController.signin);
 router.get('/',  UserController.isAuthenticated, UserController.getAll);
+router.get('/admins', UserController.isAuthenticated, UserController.getAllAdmins);
 router.get('/:login', UserController.isAuthenticated, UserController.getByLogin);
 router.post('/',  UserController.create);
 router.post('/createAdmin', UserController.createAdmin);

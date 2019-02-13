@@ -34,6 +34,22 @@ controller.getAll = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.getAllAdmins= async(req, res, next) => {
+    try{
+
+        let users = await User.find({admin: true});
+        let index;
+        for(let i = 0; i < users.length; i++){
+            if( users[i].superAdmin === true) {
+                index = i;
+            }
+        }
+        users.splice(index, 1);
+        res.status(200).json(users);
+    } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
 controller.getByLogin = async (req, res, next) => {
     try {
         let user = await User.findOne({login: req.params.login});
