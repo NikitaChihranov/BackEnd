@@ -28,8 +28,22 @@ controller.logout = async (req, res, next) => {
     req.logout();
 };
 controller.getAll = async (req, res, next) => {
-    try {
+    try{
         res.status(200).json(await User.find({}));
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
+controller.getAllApartSuper = async (req, res, next) => {
+    try {
+        let users = await User.find({});
+        let index;
+        for( let i=0; i<users.length; i++) {
+            if(users[i].superAdmin === true) index = i;
+        }
+        users.splice(index, 1);
+        console.log(users);
+        res.status(200).json(users);
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
@@ -127,7 +141,8 @@ controller.update = async (req, res, next) => {
     try {
         let userWithPhoto = await User.findOne({_id: req.params.id});
         fs.unlink('./public/userPhotos/' + userWithPhoto.photo, (err) => (err));
-        let user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        let user = await User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
+        console.log(user);
         res.status(200).json(user);
     } catch (e) {
         next(new ControllerError(e.message, 400));
@@ -147,20 +162,10 @@ controller.updatePhoto = async (req, res, next) => {
     }
 }
 controller.delete = async (req, res, next) => {
-    let userWithPhoto = await User.findOne({login: req.params.login});
-    if (userWithPhoto != null) {
-        if (userWithPhoto.login === req.user.login) {
-            let user = new User({firstName: 'can`t delete'});
-            res.status(201).json(user);
-        } else {
+    let userWithPhoto = await User.findOne({_id: req.params.id});
             fs.unlink('./public/userPhotos/' + userWithPhoto.photo, (err) => (err));
             let user = await User.findByIdAndRemove(userWithPhoto._id);
             res.status(200).json(user);
-        }
-    } else {
-        let user = new User({firstName: 'nothing to delete'});
-        res.status(201).json(user);
-    }
 };
 controller.deleteAll = async (req, res, next) => {
     try {
