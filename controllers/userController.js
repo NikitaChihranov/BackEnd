@@ -165,7 +165,6 @@ controller.delete = async (req, res, next) => {
 controller.deleteAll = async (req, res, next) => {
     try {
         let users = await User.find({admin: false});
-        console.log(users);
         for (let user of users) {
             fs.unlink('./public/userPhotos/' + user.photo, (err) => (err));
         }
