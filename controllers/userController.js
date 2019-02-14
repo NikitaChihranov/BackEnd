@@ -86,15 +86,8 @@ controller.create = async (req, res, next) => {
                 res.status(201).json(user);
             } else {
                 let user = await User.create(req.body);
-                if (user.photo == undefined) {
-                    user.photo = 'no photo';
-                    user.save();
-                    console.log(user);
-                    res.status(201).json(user);
-                } else {
                     res.status(201).json(user);
                 }
-            }
         } else {
             let user = new User({firstName: 'err'});
             res.status(201).json(user);

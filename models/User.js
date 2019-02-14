@@ -19,7 +19,8 @@ let UserSchema = new Schema({
         type: String,
     },
     photo:{
-        type: String
+        type: String,
+        default: 'no photo'
     },
     phone:{
         type: String

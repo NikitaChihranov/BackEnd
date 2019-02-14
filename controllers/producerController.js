@@ -28,7 +28,12 @@ controller.getAll = async (req, res, next) => {
 controller.getByName = async (req, res, next) => {
     try{
         let producer = await Producer.findOne({title: req.params.name});
-        res.status(200).json(producer);
+        if(producer!= null) {
+            res.status(200).json(producer);
+        }else{
+            let noExist = new Producer({title: 'err'});
+            res.status(200).json(noExist);
+        }
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }
@@ -45,6 +50,7 @@ controller.getProducerByAuthor = async(req, res, next) => {
 controller.create = async (req, res, next) => {
     try{
         let producer = await Producer.create(req.body);
+        console.log(producer);
         res.status(201).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));

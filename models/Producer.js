@@ -7,7 +7,10 @@ let ProducerSchema = new Schema({
         short: String,
         all: String
     },
-    photo: String,
+    photo: {
+        type: String,
+        default: 'no photo'
+    },
     country: String,
     userIdAuthor: String,
     date: {
