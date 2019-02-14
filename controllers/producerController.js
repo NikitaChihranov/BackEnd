@@ -72,10 +72,10 @@ controller.uploadPhoto = async (req, res, next) => {
 }
 controller.update =async (req, res, next) => {
     try{
-        let producerWithPhoto = await Producer.findOne({title: req.params.name});
+        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
         let photo = producerWithPhoto.photo;
         fs.unlink('./public/ProducerPhotos/' + photo, (err) => err);
-        let producer = await Producer.findOneAndUpdate({title: req.params.name}, req.body, {new: true});
+        let producer = await Producer.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));
@@ -96,9 +96,9 @@ controller.updatePhoto = async (req, res, next) => {
 }
 controller.delete = async (req, res, next) => {
     try{
-        let producerWithPhoto = await Producer.findOne({title: req.params.name});
+        let producerWithPhoto = await Producer.findOne({_id: req.params.id});
         fs.unlink('./public/ProducerPhotos/' + producerWithPhoto.photo, (err) => (err));
-        let producer = await Producer.findOneAndRemove({title: req.params.name});
+        let producer = await Producer.findOneAndRemove({_id: req.params.id});
         res.status(200).json(producer);
     }catch (e) {
         next(new ControllerError(e.message, 400));

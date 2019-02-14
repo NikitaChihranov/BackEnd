@@ -6,9 +6,9 @@ router.get('/:name', ProducerController.getByName);
 router.get('/author/:id', ProducerController.getProducerByAuthor);
 router.post('/', ProducerController.create);
 router.post('/uploadPhoto/:id', ProducerController.uploadPhoto);
-router.put('/:name', ProducerController.update);
+router.put('/:id', ProducerController.update);
 router.put('/updatePhoto/:id', ProducerController.updatePhoto);
-router.delete('/:name', ProducerController.delete);
+router.delete('/:id', ProducerController.delete);
 router.delete('/', ProducerController.deleteAll);
 router.get('/viewAll/:id', ProducerController.viewAllProductsByProducer);
 
