@@ -142,7 +142,6 @@ controller.update = async (req, res, next) => {
         let userWithPhoto = await User.findOne({_id: req.params.id});
         fs.unlink('./public/userPhotos/' + userWithPhoto.photo, (err) => (err));
         let user = await User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
-        console.log(user);
         res.status(200).json(user);
     } catch (e) {
         next(new ControllerError(e.message, 400));
