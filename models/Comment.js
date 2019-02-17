@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 let CommentSchema = new Schema({
     date:{
         type: Date,
-        default: new Date()
+        default: Date.now()
     },
     text: String,
     user:{

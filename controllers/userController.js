@@ -19,12 +19,8 @@ let controller = {};
 controller.signin = async (req, res, next) => {
     if (req.user.firstName === 'not found') {
         let user = new User({firstName: 'not found'});
-        let users = await User.find({});
-        console.log(users);
         res.status(200).json(user);
     } else {
-        let users = await User.find({});
-        console.log(users);
         res.status(200).json(req.user);
     }
 };
