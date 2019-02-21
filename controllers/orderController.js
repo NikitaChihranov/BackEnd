@@ -23,7 +23,6 @@ controller.getById = async (req, res, next) => {
 controller.getOrdersByUser = async (req, res, next) => {
     try{
         let orders = await Order.find({userId: req.params.id});
-        console.log(orders);
         res.status(200).json(orders);
     }catch (e) {
         next(new ControllerError(e.message, 400));
