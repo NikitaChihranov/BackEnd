@@ -60,12 +60,16 @@ controller.getOrdersByUser = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
-controller.getAmountOfOrdersByProduct = async (req, res, next) => {
+controller.getAmountOfOrdersForAllProducts = async (req, res, next) => {
     try{
-        let product = await Product.findOne({_id: req.params.id});
-        console.log(product.title);
-        let orders= await Order.find({product: product.title});
-        res.status(200).json(orders.length);
+        let products = await Product.find({});
+        let amounts = [];
+        for(let product of products) {
+            let orders = await Order.find({product: product.title});
+            let length = orders.length;
+            amounts.push(length);
+        }
+        res.status(200).json(amounts);
     }catch (e) {
         next(new ControllerError(e.message, 400));
     }

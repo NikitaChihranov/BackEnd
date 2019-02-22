@@ -4,7 +4,7 @@ let OrderController = require('../controllers/orderController');
 router.get('/', OrderController.getAll);
 router.get('/:id', OrderController.getById);
 router.get('/user/:id', OrderController.getOrdersByUser);
-router.get('/product/:id', OrderController.getAmountOfOrdersByProduct);
+router.get('/get/forAllProducts', OrderController.getAmountOfOrdersForAllProducts);
 router.put('/order/setDelivered/:id', OrderController.setDelivered);
 router.put('/order/setPaid/:id', OrderController.setPaid);
 router.put('/order/setClosed/:id', OrderController.setClosed);
