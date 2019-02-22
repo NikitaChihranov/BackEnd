@@ -17,7 +17,11 @@ let OrderSchema = new Schema({
     phoneNumber: String,
     details: String,
     paymentType: String,
-    totalPrice: Number
+    totalPrice: Number,
+    status: {
+        type: String,
+        default: 'ordered'
+    }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

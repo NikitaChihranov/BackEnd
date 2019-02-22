@@ -20,6 +20,38 @@ controller.getById = async (req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.setDelivered = async (req, res, next) => {
+    try {
+        let order = await Order.findOne({_id: req.params.id});
+        order.status = 'delivered';
+        order.save();
+        res.status(200).json(order);
+
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.setPaid = async(req, res, next) => {
+    try{
+        let order = await Order.findOne({_id: req.params.id});
+        order.status = 'paid';
+        order.save();
+        res.status(200).json(order);
+
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.setClosed = async(req, res, next) => {
+    try{
+        let order = await Order.findOne({_id: req.params.id});
+        order.status = 'closed';
+        order.save();
+        res.status(200).json(order);
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
 controller.getOrdersByUser = async (req, res, next) => {
     try{
         let orders = await Order.find({userId: req.params.id});
