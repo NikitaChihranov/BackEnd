@@ -18,7 +18,10 @@ let upload = multer({
 
 controller.getAll = async (req, res, next) => {
     try {
-        res.status(200).json(await Product.find({}));
+        console.log(req.params.limit);
+        let a = req.params.limit;
+        let products = await Product.find({}).limit(Number(a)).skip(Number(req.params.skip));
+        res.status(200).json(products);
     } catch (e) {
         next(new ControllerError(e.message, 400));
     }
@@ -38,10 +41,20 @@ controller.getByName = async (req, res, next) => {
 };
 controller.getProductsByAuthor = async(req, res, next) => {
     try{
-        let products = await Product.find({userIdAuthor: req.params.id});
+        let dateFrom = new Date(req.params.dateFrom);
+        let dateTo = new Date(req.params.dateTo);
+        let products = await Product.find({userIdAuthor: req.params.id, date: {$gte: dateFrom, $lte: dateTo}});
         console.log(products);
         res.status(200).json(products);
     }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.getProductsByAuthor1 = async(req, res, next) => {
+    try {
+        let products = await Product.find({userIdAuthor: req.params.id});
+        res.status(200).json(products);
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 };

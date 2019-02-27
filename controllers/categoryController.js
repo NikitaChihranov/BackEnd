@@ -12,8 +12,19 @@ controller.getAll = async (req, res, next) => {
 };
 controller.getCategoryByAuthor = async (req, res, next) => {
     try {
+        let dateFrom = new Date(req.params.dateFrom);
+        let dateTo = new Date(req.params.dateTo);
+        console.log(dateFrom);
+        let categories = await Category.find({userIdAuthor: req.params.id, date:{$gte: dateFrom, $lte: dateTo}});
+        console.log(categories.length);
+        res.status(200).json(categories);
+    } catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+}
+controller.getCategoryByAuthor1 = async (req, res, next) => {
+    try {
         let categories = await Category.find({userIdAuthor: req.params.id});
-        console.log(categories);
         res.status(200).json(categories);
     } catch (e) {
         next(new ControllerError(e.message, 400));

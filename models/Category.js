@@ -10,7 +10,7 @@ let CategorySchema = new Schema({
         ref: 'Photo'
     },
     date:{
-        type: String,
+        type: Date,
         default: new Date()
     },
     userIdAuthor: String

@@ -52,6 +52,17 @@ controller.setClosed = async(req, res, next) => {
         next(new ControllerError(e.message, 400));
     }
 };
+controller.setOrdered = async (req, res, next) => {
+    try {
+        let order = await Order.findOne({_id: req.params.id});
+        order.status = 'ordered';
+        order.save();
+        res.status(200).json(order);
+
+    }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
 controller.getOrdersByUser = async (req, res, next) => {
     try{
         let orders = await Order.find({userId: req.params.id});
@@ -62,10 +73,12 @@ controller.getOrdersByUser = async (req, res, next) => {
 };
 controller.getAmountOfOrdersForAllProducts = async (req, res, next) => {
     try{
-        let products = await Product.find({});
+        let dateFrom = new Date(req.params.dateFrom);
+        let dateTo = new Date(req.params.dateTo);
         let amounts = [];
+        let products = await Product.find({});
         for(let product of products) {
-            let orders = await Order.find({product: product.title});
+            let orders = await Order.find({product: product.title, date: {$gte: dateFrom, $lte: dateTo}});
             let length = orders.length;
             amounts.push(length);
         }

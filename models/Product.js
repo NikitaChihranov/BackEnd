@@ -23,7 +23,7 @@ let ProductSchema = new Schema({
         type: Number
     },
     date:{
-        type: String,
+        type: Date,
         default: new Date()
     },
     category:{

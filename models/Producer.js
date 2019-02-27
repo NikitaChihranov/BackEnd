@@ -14,7 +14,7 @@ let ProducerSchema = new Schema({
     country: String,
     userIdAuthor: String,
     date: {
-        type: String,
+        type: Date,
         default: new Date()
     }
 });

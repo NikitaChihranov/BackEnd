@@ -40,10 +40,20 @@ controller.getByName = async (req, res, next) => {
 };
 controller.getProducerByAuthor = async(req, res, next) => {
     try{
-        let producers = await Producer.find({userIdAuthor: req.params.id});
+        let dateFrom = new Date(req.params.dateFrom);
+        let dateTo = new Date(req.params.dateTo);
+        let producers = await Producer.find({userIdAuthor: req.params.id, date: {$gte: dateFrom, $lte: dateTo}});
         console.log(producers);
         res.status(200).json(producers);
     }catch (e) {
+        next(new ControllerError(e.message, 400));
+    }
+};
+controller.getProducerByAuthor1 = async(req, res, next) => {
+    try {
+        let producers = await Producer.find({userIdAuthor: req.params.id});
+        res.status(200).json(producers);
+    } catch (e) {
         next(new ControllerError(e.message, 400));
     }
 }
